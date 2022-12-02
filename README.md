@@ -32,4 +32,12 @@ PHYLOGENETICS
   - These individual gene trees were concatenated and used to estimate the species tree using the coalescent-based method in ASTRAL. 
 - ML and coalescent trees were generated for all three datasets (whole, X, autosome). 
 - We inferred anscestral states using RASP.
+  - We did this separately for condensed phylogenies that consisted of either the flies that were tested for amanita tolerance or the Natural toxin mix tolerance. These were edited in Inkscape.
 - We performed a sensitivity analysis to identify orthologs that best supported our species tree.
+  - This was done first by using tiger (tiger.sh) to organize sites based on site disagreement.
+  - Then, we used AMAS to concatenate binned sequences and sequentially added bins to add sites.
+  - We regenerated ML trees for each alignment with RAxML. 
+    - We then estimated pairwise distance among trees with treeCMP. Plotted these with cmdscale in R and calculated euclidean distance.
+    - generated new ML trees with bootstrap support values for new alignments based on euclidean distance and binning.
+  - Used bootstrapped gene trees to get support for coalescent tree in RAxML. 
+  - Generated heatmaps with custom script from Dowdy et al. to get heatmap for each node of the tree. Manually edited in Inkscape.
