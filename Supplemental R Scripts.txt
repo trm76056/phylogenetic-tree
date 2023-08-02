@@ -1,0 +1,52 @@
+# Analysis of toxin tolerance using Generalized Linear Model of binomial data with bias adjustment
+
+>glm(formula = IndividualSurvival ~ Treatment, family = binomial(), data = Arawakana, method = "brglm_fit")
+
+
+# Analysis of survival data on natural toxin mix and maximum survival using a Generalized Linear Mixed Model of binomial data with bias adjustment followed by Tukey contrasts
+	# Designate Treatment as factor
+
+>treatment = as.factor(Tripunctata$Treatment)
+>Tripunctata$Treatment.Factor = treatment
+
+	#Confirm/Order levels of factor
+
+>levels(Tripunctata$Treatment.Factor)
+>Tripunctata$Treatment.Factor <- ordered(Tripunctata$Treatment.Factor, levels = c("0 µg/g", "5 µg/g", "10 µg/g", "50 µg/g"))
+		#levels depends on the treatment and differs between the natural toxin mix and maximum survival assays
+
+	#GLMM analysis
+>tripunctata_bglmer <- bglmer(formula = IndividualSurvival ~ Treatment.Factor + (1 | Rep), data = Tripunctata, family = binomial(), fixef.prior = normal(cov = diag(9,4)))
+        
+        #for the bias adjustment (e.g., fixef.prior = normal(cov = diag(9,4))) the second value 4 is equivalent to the number of levels in the treatment category
+
+	#Tukey Contrasts
+>summary(glht(tripunctata_bglmer, mcp(Treatment.Factor="Tukey")))
+
+
+# One-way ANOVA of Thorax Length (conducted independently for each sex/species combination)
+	# Designate Treatment as factor
+
+>treatment = as.factor(Tripunctata_Female$Treatment)
+>Tripunctata_Female$Treatment.Factor = treatment
+
+	#Confirm/Order levels of factor
+
+>levels(Tripunctata_Female$Treatment.Factor)
+>Tripunctata_Female$Treatment.Factor <- ordered(Tripunctata_Female$Treatment.Factor, levels = c("0 µg/g", "5 µg/g", "10 µg/g", "50 µg/g"))
+
+	#Calculate mean thorax length, standard deviation, and sample number for each factor level
+
+>library(dplyr)
+group_by(Tripunctata_Female, Treatment.Factor) %>%
+  summarise(
+    count = n(),
+    mean = mean(Thorax_Length, na.rm = TRUE),
+    sd = sd(Thorax_Length, na.rm = TRUE)
+  )
+
+	#One-Way ANOVA and Tukey HSD multiple comparison of means
+
+>tripunctata.female.aov = aov(Thorax_Length ~ Treatment.Factor, data = Tripunctata_Female)
+>summary(tripunctata.female.aov)
+>TukeyHSD(tripunctata.female.aov)
