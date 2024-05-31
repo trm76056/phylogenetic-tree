@@ -17,7 +17,7 @@ ml Python/3.8.6-GCCcore-10.2.0
 #for files in mafft_aligned/*.fasta
 #do
     #index aligned sequence using tiger
-    echo $files
+    #echo $files
     #python tiger.py index -i $files -o $files.tiger
     #get rate using tiger
     #python tiger.py rate -i $files.tiger.ref.ti -o $files.tiger.rate
